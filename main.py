@@ -14,7 +14,7 @@ try:
     from groq import Groq
 except Exception:
     Groq = None
-BASE=Path(__file__).resolve().parent.parent
+BASE=Path(__file__).resolve().parent
 DATA=BASE/'data/demo_signals.json'
 HKEY=os.getenv('HINDSIGHT_API_KEY',''); HURL=os.getenv('HINDSIGHT_BASE_URL','https://api.hindsight.vectorize.io'); BANK=os.getenv('HINDSIGHT_BANK_ID','compmind-demo'); GKEY=os.getenv('GROQ_API_KEY','')
 app=FastAPI(title='CompMind API')
@@ -29,7 +29,8 @@ def ensure(c):
     except Exception: pass
 def demo(cmp): return [x for x in json.loads(DATA.read_text()) if x['competitor'].lower()==cmp.lower()]
 @app.get('/')
-def home(): return FileResponse(BASE/'static/index.html')
+def home():
+    return FileResponse(BASE / "index.html")
 @app.get('/api/health')
 def health(): return {'status':'ok','hindsight_configured':bool(HKEY and Hindsight),'groq_configured':bool(GKEY and Groq),'bank_id':BANK}
 @app.post('/api/seed')
